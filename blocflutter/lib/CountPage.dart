@@ -1,7 +1,6 @@
 import 'package:blocflutter/bloc/Event.dart';
 import 'package:blocflutter/bloc/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/bloc.dart';
@@ -17,35 +16,43 @@ class _CountPageState extends State<CountPage> {
   @override
   Widget build(BuildContext context) {
     return CountProvider(
-        child: Scaffold(
-            body: BlocBuilder<CountBloc,int>(builder: (context,state) {
-              return Column(
+      child: Scaffold(
+        body: BlocBuilder<CountBloc, List<int>>(builder: (context, state) {
+          List list = state;
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              Text(
+                "Count List: ${list.join(", ")}",
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Count $state"),
-                  Row(
-                    children: [
-                      _AddCoutnButton(() => _increate(context),'add'),
-                      _AddCoutnButton(() => _deCreate(context),'remove'),
-                    ],
-                  )
+                  _AddCountButton(() => _increase(context), 'Add'),
+                  const SizedBox(width: 10),
+                  _AddCountButton(() => _decrease(context), 'Remove'),
                 ],
-              );
-            }),
-        ),
+              ),
+            ],
+          );
+        }),
+      ),
     );
   }
 
-  _increate(BuildContext context)
-  {
+  void _increase(BuildContext context) {
     context.read<CountBloc>().add(InCreateEvent());
   }
 
-    _deCreate(BuildContext context)
-  {
+  void _decrease(BuildContext context) {
     context.read<CountBloc>().add(DeCreateEvent());
   }
 
-  Widget _AddCoutnButton(Function() onPressed, String text){
+  Widget _AddCountButton(VoidCallback onPressed, String text) {
     return ElevatedButton(onPressed: onPressed, child: Text(text));
   }
 }
